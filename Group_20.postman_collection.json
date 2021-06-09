@@ -181,6 +181,31 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "26",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "1500",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Olexiy",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "/s34lfgbj/Olexiy/jjd909/21121kjkWpqc4627123qwe355436evny",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://116.203.27.46:5002/new_data",
 					"protocol": "http",
