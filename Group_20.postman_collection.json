@@ -33,15 +33,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://116.203.27.46:5002/get_method?name=Olexiy&age=28",
-					"protocol": "http",
+					"raw": "{{url}}/get_method?name=Olexiy&age=28",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"get_method"
 					],
@@ -69,7 +64,7 @@
 					"formdata": [
 						{
 							"key": "age",
-							"value": "26",
+							"value": "28",
 							"type": "text"
 						},
 						{
@@ -85,15 +80,10 @@
 					]
 				},
 				"url": {
-					"raw": "http://116.203.27.46:5002/user_info_1",
-					"protocol": "http",
+					"raw": "{{url}}/user_info_1",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"user_info_1"
 					]
@@ -122,15 +112,10 @@
 					]
 				},
 				"url": {
-					"raw": "http://116.203.27.46:5002/login",
-					"protocol": "http",
+					"raw": "{{url}}/login",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"login"
 					],
@@ -152,7 +137,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"age\": 26,\r\n\"salary\": 1500,\r\n\"name\": \"Olexiy\",\r\n\"auth_token\": \"/s34lfgbj/Olexiy/jjd909/21121kjkWpqc4627123qwe355436evny\"\r\n}",
+					"raw": "{\r\n\"age\": 28,\r\n\"salary\": 1500,\r\n\"name\": \"Olexiy\",\r\n\"auth_token\": \"{{token}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -160,15 +145,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://116.203.27.46:5002/user_info",
-					"protocol": "http",
+					"raw": "{{url}}/user_info",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"user_info"
 					]
@@ -186,7 +166,7 @@
 					"formdata": [
 						{
 							"key": "age",
-							"value": "26",
+							"value": "28",
 							"type": "text"
 						},
 						{
@@ -201,21 +181,16 @@
 						},
 						{
 							"key": "auth_token",
-							"value": "/s34lfgbj/Olexiy/jjd909/21121kjkWpqc4627123qwe355436evny",
+							"value": "{{token}}",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://116.203.27.46:5002/new_data",
-					"protocol": "http",
+					"raw": "{{url}}/new_data",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"new_data"
 					]
@@ -248,21 +223,16 @@
 						},
 						{
 							"key": "auth_token",
-							"value": "/s34lfgbj/Olexiy/jjd909/21121kjkWpqc4627123qwe355436evny",
+							"value": "{{token}}",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://116.203.27.46:5002/test_pet_info",
-					"protocol": "http",
+					"raw": "{{url}}/test_pet_info",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"test_pet_info"
 					],
@@ -287,7 +257,7 @@
 					"formdata": [
 						{
 							"key": "age",
-							"value": "26",
+							"value": "28",
 							"type": "text"
 						},
 						{
@@ -302,21 +272,16 @@
 						},
 						{
 							"key": "auth_token",
-							"value": "/s34lfgbj/Olexiy/jjd909/21121kjkWpqc4627123qwe355436evny",
+							"value": "{{token}}",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://116.203.27.46:5002/get_test_user",
-					"protocol": "http",
+					"raw": "{{url}}/get_test_user",
 					"host": [
-						"116",
-						"203",
-						"27",
-						"46"
+						"{{url}}"
 					],
-					"port": "5002",
 					"path": [
 						"get_test_user"
 					]
@@ -327,9 +292,64 @@
 		{
 			"name": "currency",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": null
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/currency",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "curr_byn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "curr_code",
+							"value": "355",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/curr_byn",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"curr_byn"
+					]
+				}
 			},
 			"response": []
 		}
