@@ -29,6 +29,20 @@
 		},
 		{
 			"name": "get_method",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Тело ответа содержит отправленные параметры в строке\r",
+							"pm.test(\"Body matches strings\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Olexiy\", \"28\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -66,9 +80,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"// Проверяем статус код 200\r",
+							"// Отправляем токен в окружение\r",
 							"let tokenData = JSON.parse(responseBody);\r",
-							"postman.setEnvironmentVariable(\"token\", tokenData.token);"
+							"postman.setEnvironmentVariable(\"token\", tokenData.token);\r",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -169,6 +184,7 @@
 							"  ]\r",
 							"}\r",
 							"\r",
+							"\r",
 							"// Проверяем структуру json в ответе ч.2\r",
 							"pm.test('Schema is valid', function () {\r",
 							"    let user_info_response = pm.response.json();\r",
@@ -176,11 +192,20 @@
 							"});\r",
 							"\r",
 							"\r",
-							"pm.test(\"qa_salary_after_6_months is correct\", function () {\r",
-							"    let salary0 = pm.response.json();\r",
-							"    let salary1 = pm.response.json();\r",
-							"    pm.expect(salary1.value).to.eql(100);\r",
-							"});"
+							"// В ответе указаны коэффициенты умножения salary. Проверяем правильность результата перемножения на коэффициенты\r",
+							"pm.test(\"Salaries is correct\",function() {\r",
+							"    var salary = parseInt(pm.variables.get(\"salary\"));\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.person.u_salary_1_5_year).to.eql(salary*4);\r",
+							"    pm.expect(jsonData.qa_salary_after_12_months).to.eql(salary*2.9);\r",
+							"    pm.expect(jsonData.qa_salary_after_6_months).to.eql(salary*2);\r",
+							"    pm.expect(jsonData.start_qa_salary).to.eql(salary);\r",
+							"});\r",
+							"\r",
+							"// Отправляем значение u_salary_1_5_year в окружение\r",
+							"let jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"salary_1.5\", jsonData.person.u_salary_1_5_year);\r",
+							""
 						],
 						"type": "text/javascript"
 					}
