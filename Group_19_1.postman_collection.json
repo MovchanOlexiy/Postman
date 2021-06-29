@@ -134,7 +134,7 @@
 							"});\r",
 							"\r",
 							"\r",
-							"// Проверяем структуру JSON в ответе ч.1\r",
+							"// Проверяем структуру JSON в ответе\r",
 							"var schema = {\r",
 							"\"type\": \"object\",\r",
 							"  \"properties\": {\r",
@@ -186,8 +186,6 @@
 							"  ]\r",
 							"}\r",
 							"\r",
-							"\r",
-							"// Проверяем структуру JSON в ответе ч.2\r",
 							"pm.test('Schema is valid', function () {\r",
 							"    var user_info_response = pm.response.json();\r",
 							"    pm.expect(tv4.validate(user_info_response, schema)).to.be.true;\r",
@@ -207,6 +205,11 @@
 							"// Отправляем значение u_salary_1_5_year в окружение\r",
 							"var jsonData = pm.response.json();\r",
 							"postman.setEnvironmentVariable(\"salary_1.5\", jsonData.person.u_salary_1_5_year);\r",
+							"\r",
+							"\r",
+							"// Отправляем имя в окружение\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"name\", jsonData.person.u_name[0]);\r",
 							"\r",
 							""
 						],
@@ -251,7 +254,7 @@
 							"});\r",
 							"\r",
 							"\r",
-							"// Проверяем структуру JSON в ответе ч.1\r",
+							"// Проверяем структуру JSON в ответе\r",
 							"var schema = {\r",
 							"   \"type\": \"object\",\r",
 							"    \"properties\": {\"age\": {\"type\": \"integer\"},\r",
@@ -265,8 +268,6 @@
 							"  \"required\": [\"age\", \"name\", \"salary\"]\r",
 							"}\r",
 							"\r",
-							"\r",
-							"// Проверяем структуру JSON в ответе ч.2\r",
 							"pm.test('Schema is valid', function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
@@ -289,11 +290,6 @@
 							"    pm.expect(parseInt(jsonData.salary[2])).greaterThan(parseInt(jsonData.salary[1]));\r",
 							"    pm.expect(parseInt(jsonData.salary[2])).greaterThan(jsonData.salary[0]);\r",
 							"} );\r",
-							"\r",
-							"\r",
-							"// Отправляем имя в окружение\r",
-							"var jsonData = JSON.parse(responseBody);\r",
-							"postman.setEnvironmentVariable(\"name\", jsonData.name);\r",
 							""
 						],
 						"type": "text/javascript"
@@ -448,7 +444,7 @@
 							"});\r",
 							"\r",
 							"\r",
-							"// Проверяем структуру JSON в ответе ч.1\r",
+							"// Проверяем структуру JSON в ответе\r",
 							"var schema = {\r",
 							"  \"type\": \"object\",\r",
 							"  \"properties\": {\r",
@@ -493,8 +489,6 @@
 							"  ]\r",
 							"}\r",
 							"\r",
-							"\r",
-							"// Проверяем структуру JSON в ответе ч.2\r",
 							"pm.test('Schema is valid', function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
@@ -554,6 +548,33 @@
 					],
 					"path": [
 						"get_test_user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "currency",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/currency",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"currency"
 					]
 				}
 			},
