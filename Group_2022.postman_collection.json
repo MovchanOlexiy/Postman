@@ -67,8 +67,8 @@
 					"script": {
 						"exec": [
 							"// Відправляєм token в оточення\r",
-							"let jsonData = pm.response.json();\r",
-							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+							"let resBody = pm.response.json();\r",
+							"postman.setEnvironmentVariable(\"token\", resBody.token);"
 						],
 						"type": "text/javascript"
 					}
@@ -163,20 +163,20 @@
 							"\r",
 							"\r",
 							"// У відповіді вказані коефіцієнти множення salary. Перевіряєм правильність перемноження на коефіцієнти\r",
-							"pm.test(\"Salaries is correct\", function() {\r",
+							"pm.test(\"Salaries are correct\", function() {\r",
 							"    var reqBody = JSON.parse(request.data);\r",
-							"    var salary = reqBody.age;\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.person.u_salary_1_5_year).to.eql(salary*4);\r",
-							"    pm.expect(jsonData.qa_salary_after_12_months).to.eql(salary*2.9);\r",
-							"    pm.expect(jsonData.qa_salary_after_6_months).to.eql(salary*2);\r",
-							"    pm.expect(jsonData.start_qa_salary).to.eql(salary);\r",
+							"    var salary = reqBody.salary;\r",
+							"    var resBody = pm.response.json();\r",
+							"    pm.expect(resBody.person.u_salary_1_5_year).to.eql(salary*4);\r",
+							"    pm.expect(resBody.qa_salary_after_12_months).to.eql(salary*2.9);\r",
+							"    pm.expect(resBody.qa_salary_after_6_months).to.eql(salary*2);\r",
+							"    pm.expect(resBody.start_qa_salary).to.eql(salary);\r",
 							"});\r",
 							"\r",
 							"\r",
 							"// Відправляєм значення u_salary_1_5_year в оточення\r",
-							"var jsonData = pm.response.json();\r",
-							"postman.setEnvironmentVariable(\"salary_1.5\", jsonData.person.u_salary_1_5_year);\r",
+							"var resBody = pm.response.json();\r",
+							"postman.setEnvironmentVariable(\"salary_1.5\", resBody.person.u_salary_1_5_year);\r",
 							""
 						],
 						"type": "text/javascript"
@@ -250,18 +250,18 @@
 							"// У відповіді вказані коефіцієнти множення salary. Перевіряєм правильність перемноження на коефіцієнти\r",
 							"pm.test(\"Salaries are correct\", function() {\r",
 							"    var salary = parseInt(pm.variables.get(\"salary\"));\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.salary[0]).to.eql(salary);\r",
-							"    pm.expect(parseInt(jsonData.salary[1])).to.eql(salary*2);\r",
-							"    pm.expect(parseInt(jsonData.salary[2])).to.eql(salary*3);\r",
+							"    var resBody = pm.response.json();\r",
+							"    pm.expect(resBody.salary[0]).to.eql(salary);\r",
+							"    pm.expect(parseInt(resBody.salary[1])).to.eql(salary*2);\r",
+							"    pm.expect(parseInt(resBody.salary[2])).to.eql(salary*3);\r",
 							"});\r",
 							"\r",
 							"\r",
 							"// Перевірити, що 2-й елемент масиву salary більший за 1-й и 0-й\r",
 							"pm.test(\"Equality check\", function() {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(parseInt(jsonData.salary[2])).greaterThan(parseInt(jsonData.salary[1]));\r",
-							"    pm.expect(parseInt(jsonData.salary[2])).greaterThan(jsonData.salary[0]);\r",
+							"    var resBody = pm.response.json();\r",
+							"    pm.expect(parseInt(resBody.salary[2])).greaterThan(parseInt(resBody.salary[1]));\r",
+							"    pm.expect(parseInt(resBody.salary[2])).greaterThan(resBody.salary[0]);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -353,14 +353,12 @@
 							"\r",
 							"// У відповіді вказані коефіцієнти множення weight. Перевіряєм правильність перемноження на коефіцієнти\r",
 							"pm.test(\"Weight is correct\", function() {\r",
-							"    var reqBody = JSON.parse(request.data);\r",
-							"    var weight = data.weight;\r",
+							"    var weight = parseInt(pm.variables.get(\"weight\"));\r",
 							"    var resBody = pm.response.json();\r",
-							"    pm.expect(resBody.daily_food).to.eql(reqBody.body.weight*0.012);\r",
-							"    pm.expect(parseInt(jsonData.salary[2])).to.eql(salary*3);\r",
+							"    pm.expect(resBody.daily_food).to.eql(weight*0.012);\r",
+							"    pm.expect(parseInt(resBody.daily_sleep)).to.eql(weight*2.5);\r",
 							"});\r",
-							"\r",
-							"console.log(reqBody);"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -413,6 +411,55 @@
 		},
 		{
 			"name": "get_test_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Перевіряєм статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Перевіряєм структуру JSON у відповіді\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"age\": {\"type\": \"string\"},\r",
+							"    \"family\": {\"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"children\": {\"type\": \"array\",\r",
+							"          \"items\": [\r",
+							"            {\"type\": \"array\",\r",
+							"             \"items\": [{\"type\": \"string\"},{\"type\": \"integer\"}]\r",
+							"            },\r",
+							"            {\r",
+							"              \"type\": \"array\",\r",
+							"              \"items\": [{\"type\": \"string\"},{\"type\": \"integer\"}]\r",
+							"            }\r",
+							"          ]},\r",
+							"        \"u_salary_1_5_year\": {\"type\": \"integer\"}\r",
+							"      },\r",
+							"      \"required\": [\"children\",\"u_salary_1_5_year\"]\r",
+							"    },\r",
+							"    \"name\": {\"type\": \"string\"},\r",
+							"    \"salary\": {\"type\": \"integer\"}\r",
+							"  },\r",
+							"  \"required\": [\"age\",\"family\",\"name\",\"salary\"]\r",
+							"}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var get_test_user_response = pm.response.json();\r",
+							"    pm.expect(tv4.validate(get_test_user_response, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -431,12 +478,12 @@
 						},
 						{
 							"key": "name",
-							"value": "Alexandro",
+							"value": "{{name}}",
 							"type": "text"
 						},
 						{
 							"key": "auth_token",
-							"value": "/s34lfgbj/Alexandro/jjd909/33802kjkWpqc2136123456222744evny",
+							"value": "{{token}}",
 							"type": "text"
 						}
 					]
