@@ -1,0 +1,529 @@
+{
+	"info": {
+		"_postman_id": "f283c54e-10ce-4870-93eb-5ca9c4904856",
+		"name": "Group_2022",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "first",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://162.55.220.72:5005/first",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"first"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_method",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://162.55.220.72:5005/get_method?name=Alexandro&age=23",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"get_method"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Alexandro"
+						},
+						{
+							"key": "age",
+							"value": "23"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Відправляєм token в оточення\r",
+							"let jsonData = pm.response.json();\r",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "Alexandro",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://162.55.220.72:5005/login",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Перевіряєм статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Перевіряєм структуру JSON у відповіді\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"person\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"u_age\": {\"type\": \"integer\"},\r",
+							"        \"u_name\": {\"type\": \"array\", \"items\": [\r",
+							"            {\"type\": \"string\"},\r",
+							"            {\"type\": \"integer\"},\r",
+							"            {\"type\": \"integer\"}\r",
+							"          ]\r",
+							"        },\r",
+							"        \"u_salary_1_5_year\": {\"type\": \"integer\"}\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"u_age\",\r",
+							"        \"u_name\",\r",
+							"        \"u_salary_1_5_year\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"qa_salary_after_12_months\": {\"type\": \"number\"},\r",
+							"    \"qa_salary_after_6_months\": {\"type\": \"integer\"},\r",
+							"    \"start_qa_salary\": {\"type\": \"integer\"}\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"     \"person\",\r",
+							"     \"qa_salary_after_12_months\",\r",
+							"     \"qa_salary_after_6_months\",\r",
+							"     \"start_qa_salary\"\r",
+							"    ]\r",
+							"}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var user_info_response = pm.response.json();\r",
+							"    pm.expect(tv4.validate(user_info_response, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// У відповіді вказані коефіцієнти множення salary. Перевіряєм правильність перемноження на коефіцієнти\r",
+							"pm.test(\"Salaries is correct\", function() {\r",
+							"    var reqBody = JSON.parse(request.data);\r",
+							"    var salary = reqBody.age;\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.person.u_salary_1_5_year).to.eql(salary*4);\r",
+							"    pm.expect(jsonData.qa_salary_after_12_months).to.eql(salary*2.9);\r",
+							"    pm.expect(jsonData.qa_salary_after_6_months).to.eql(salary*2);\r",
+							"    pm.expect(jsonData.start_qa_salary).to.eql(salary);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Відправляєм значення u_salary_1_5_year в оточення\r",
+							"var jsonData = pm.response.json();\r",
+							"postman.setEnvironmentVariable(\"salary_1.5\", jsonData.person.u_salary_1_5_year);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"age\": 23,\r\n\"salary\": 1000,\r\n\"name\": \"Alexandro\",\r\n\"auth_token\": \"{{token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://162.55.220.72:5005/user_info",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"user_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new_data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Перевіряєм статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Перевіряєм структуру JSON у відповіді\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"age\": {\"type\": \"integer\"},\r",
+							"    \"name\": {\"type\": \"string\"},\r",
+							"    \"salary\": {\"type\": \"array\",\r",
+							"      \"items\": [\r",
+							"        {\"type\": \"integer\"},\r",
+							"        {\"type\": \"string\"},\r",
+							"        {\"type\": \"string\"}\r",
+							"      ]}\r",
+							"  },\r",
+							"  \"required\": [\"age\", \"name\", \"salary\"]\r",
+							"}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var new_data_response = pm.response.json();\r",
+							"    pm.expect(tv4.validate(new_data_response, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// У відповіді вказані коефіцієнти множення salary. Перевіряєм правильність перемноження на коефіцієнти\r",
+							"pm.test(\"Salaries are correct\", function() {\r",
+							"    var salary = parseInt(pm.variables.get(\"salary\"));\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.salary[0]).to.eql(salary);\r",
+							"    pm.expect(parseInt(jsonData.salary[1])).to.eql(salary*2);\r",
+							"    pm.expect(parseInt(jsonData.salary[2])).to.eql(salary*3);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Перевірити, що 2-й елемент масиву salary більший за 1-й и 0-й\r",
+							"pm.test(\"Equality check\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(parseInt(jsonData.salary[2])).greaterThan(parseInt(jsonData.salary[1]));\r",
+							"    pm.expect(parseInt(jsonData.salary[2])).greaterThan(jsonData.salary[0]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "23",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Alexandro",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://162.55.220.72:5005/new_data",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"new_data"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "test_pet_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Перевіряєм статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Перевіряєм структуру JSON у відповіді\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"age\": {\"type\": \"integer\"},\r",
+							"    \"daily_food\": {\"type\": \"number\"},\r",
+							"    \"daily_sleep\": {\"type\": \"number\"},\r",
+							"    \"name\": {\"type\": \"string\"}\r",
+							"    },\r",
+							"  \"required\": [\"age\",\"daily_food\",\"daily_sleep\",\"name\"]\r",
+							"}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var new_data_response = pm.response.json();\r",
+							"    pm.expect(tv4.validate(new_data_response, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// У відповіді вказані коефіцієнти множення weight. Перевіряєм правильність перемноження на коефіцієнти\r",
+							"pm.test(\"Weight is correct\", function() {\r",
+							"    var reqBody = JSON.parse(request.data);\r",
+							"    var weight = data.weight;\r",
+							"    var resBody = pm.response.json();\r",
+							"    pm.expect(resBody.daily_food).to.eql(reqBody.body.weight*0.012);\r",
+							"    pm.expect(parseInt(jsonData.salary[2])).to.eql(salary*3);\r",
+							"});\r",
+							"\r",
+							"console.log(reqBody);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "weight",
+							"value": "14",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Beta",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "/s34lfgbj/Kristina/jjd909/46948kjkWpqc67512345679220evny",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://162.55.220.72:5005/test_pet_info",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"test_pet_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_test_user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "23",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary_1.5}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Alexandro",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "/s34lfgbj/Alexandro/jjd909/33802kjkWpqc2136123456222744evny",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/get_test_user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"get_test_user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "currency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "/s34lfgbj/Alexandro/jjd909/33802kjkWpqc2136123456222744evny",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/currency",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "curr_byn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "/s34lfgbj/Alexandro/jjd909/33802kjkWpqc2136123456222744evny",
+							"type": "text"
+						},
+						{
+							"key": "curr_code",
+							"value": "100",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/curr_byn",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"curr_byn"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
