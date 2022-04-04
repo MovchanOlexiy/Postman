@@ -353,7 +353,7 @@
 							"\r",
 							"// У відповіді вказані коефіцієнти множення weight. Перевіряєм правильність перемноження на коефіцієнти\r",
 							"pm.test(\"Weight is correct\", function() {\r",
-							"    var weight = parseInt(pm.variables.get(\"weight\"));\r",
+							"    var weight = request.data.weight;\r",
 							"    var resBody = pm.response.json();\r",
 							"    pm.expect(resBody.daily_food).to.eql(weight*0.012);\r",
 							"    pm.expect(parseInt(resBody.daily_sleep)).to.eql(weight*2.5);\r",
@@ -454,6 +454,21 @@
 							"    pm.expect(tv4.validate(get_test_user_response, schema)).to.be.true;\r",
 							"});\r",
 							"\r",
+							"\r",
+							"// Перевіряємо, що значення поля name = значенню змінної name з оточення \r",
+							"pm.test(\"Name values match\", function () {\r",
+							"    var nameResponse = pm.response.json();\r",
+							"    var nameVariable = pm.variables.get(\"name\");\r",
+							"    pm.expect(nameResponse.name).to.eql(nameVariable);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Перевіряємо, що значення поля age у відповіді відповідає відправленому в запиті значення поля age \r",
+							"pm.test(\"Age values match\", function () {\r",
+							"    pm.expect(pm.response.json().age).to.eql(request.data.age);\r",
+							"\r",
+							"    console.log(request.data.age);\r",
+							"})\r",
 							""
 						],
 						"type": "text/javascript"
@@ -507,8 +522,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 500\", function () {\r",
-							"    pm.response.to.have.status(500);\r",
+							"// Перевіряєм статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.response.to.have.status(500);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -523,7 +539,7 @@
 					"formdata": [
 						{
 							"key": "auth_token",
-							"value": "/s34lfgbj/Alexandro/jjd909/33802kjkWpqc2136123456222744evny",
+							"value": "{{token}}",
 							"type": "text"
 						}
 					]
@@ -542,6 +558,47 @@
 		},
 		{
 			"name": "curr_byn",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Проверяем статус код 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Проверяем структуру JSON в ответе\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"      \"Cur_Abbreviation\": {\"type\": \"string\"},\r",
+							"      \"Cur_ID\": {\"type\": \"integer\"},\r",
+							"      \"Cur_Name\": {\"type\": \"string\"},\r",
+							"      \"Cur_OfficialRate\": {\"type\": \"number\"},\r",
+							"      \"Cur_Scale\": {\"type\": \"integer\"},\r",
+							"      \"Date\": {\"type\": \"string\"}\r",
+							"    },\r",
+							"  \"required\": [\r",
+							"    \"Cur_Abbreviation\",\r",
+							"    \"Cur_ID\",\r",
+							"    \"Cur_Name\",\r",
+							"    \"Cur_OfficialRate\",\r",
+							"    \"Cur_Scale\",\r",
+							"    \"Date\"\r",
+							"  ]\r",
+							"}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var resBody = pm.response.json();\r",
+							"    pm.expect(tv4.validate(resBody, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -550,12 +607,12 @@
 					"formdata": [
 						{
 							"key": "auth_token",
-							"value": "/s34lfgbj/Alexandro/jjd909/33802kjkWpqc2136123456222744evny",
+							"value": "{{token}}",
 							"type": "text"
 						},
 						{
 							"key": "curr_code",
-							"value": "100",
+							"value": "508",
 							"type": "text"
 						}
 					]
